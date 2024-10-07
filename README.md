@@ -1,3 +1,5 @@
+python 3.11 <= is required
+
 bytrack.py - is an attempt to measure velocity and acceleration of moving objects detected but it does not work and will not work before we figure our skewing
 
 
