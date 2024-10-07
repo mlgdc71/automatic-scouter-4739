@@ -8,6 +8,9 @@ box_annotator = sv.BoxAnnotator()
 label_annotator = sv.LabelAnnotator()
 trace_annotator = sv.TraceAnnotator()
 
+video_info = sv.VideoInfo.from_video_path(video_path="video.mp4")
+frames_generator = sv.get_video_frames_generator(source_path='video.mp4')
+
 def callback(frame: np.ndarray, _: int) -> np.ndarray:
     results = model.infer(frame)[0]
     detections = sv.Detections.from_inference(results)
@@ -23,11 +26,15 @@ def callback(frame: np.ndarray, _: int) -> np.ndarray:
         frame.copy(), detections=detections)
     annotated_frame = label_annotator.annotate(
         annotated_frame, detections=detections, labels=labels)
-    return trace_annotator.annotate(
+    annotated_frame = trace_annotator.annotate(
         annotated_frame, detections=detections)
+
+    with sv.CSVSink("tracking_results.csv") as sink:
+        for frame_index, frame in enumerate(frames_generator):
+            sink.append(detections, {"frame_index": frame_index})
 
 sv.process_video(
     source_path="video.mp4",
-    target_path="result.mp4",
+    target_path="resultc.mp4",
     callback=callback
 )
