@@ -29,12 +29,12 @@ def callback(frame: np.ndarray, _: int) -> np.ndarray:
     annotated_frame = trace_annotator.annotate(
         annotated_frame, detections=detections)
 
-    with sv.CSVSink("tracking_results1.csv") as sink:
-        for frame_index, frame in enumerate(frames_generator):
-            sink.append(detections, {"frame_index": frame_index})
+    with sv.CSVSink("tracking_results2.csv") as sink:
+        #for frame_index, frame in enumerate(frames_generator):
+        sink.append(detections, {})
 
 sv.process_video(
     source_path="video.mp4",
-    target_path="resultc1.mp4",
+    target_path="resultc2.mp4",
     callback=callback
 )
